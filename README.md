@@ -6,7 +6,18 @@
 
 ## Tools & Models Used
 
-- **Tool:** Windsurf (Model: Minimax)
+- **Tool:** Windsurf (Model: Minimax) , Z.ai (Model: GLM-4.7)
 - **Git Code Review:** Gemini 2.5 Flash
 - **Prompt:** analyze-and-suggest-improvements
 - **Goal:** Find all flaws in the code and suggest improvements
+
+
+## Test Answer Link 
+
+- https://www.notion.so/Technical-Assessment-33b453a90a4580c99947d01ff7b61f78
+
+## Test Note
+
+- อ่านและสรุปความเข้าใจด้วยตนเอง แล้วใช้ AI เป็นตัวทดสอบว่าไม่หลุดประเด็นไหน
+- อ่านโค้ดและ logic เบื้องต้น แล้วสรุปออกมาเป็นหัวข้อ จากนั้นให้ AI ช่วยชี้ว่ายังมีจุดไหนที่ขาดหายหรือควรเพิ่มเติม
+- เขียน Specification ให้ชัดเจน และคิด test case ตามโจทย์ด้วยแนวทาง TDD แล้วให้ AI เขียนโค้ด จากนั้น review และปรับแก้ด้วยตนเองก่อน แล้วค่อย review ร่วมกับ AI อีกครั้ง

@@ -1,0 +1,20 @@
+{
+  "C001": {
+    "customer_id": "C001",
+    "orders": [
+      {
+        "quantity": 1.0,
+        "timestamp": "2026-04-08T09:00:00Z"
+      }
+    ]
+  },
+  "C004": {
+    "customer_id": "C004",
+    "orders": [
+      {
+        "quantity": 2.5,
+        "timestamp": "2026-04-08T08:30:00Z"
+      }
+    ]
+  }
+}

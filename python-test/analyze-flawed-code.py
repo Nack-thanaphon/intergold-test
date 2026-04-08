@@ -1,6 +1,5 @@
 import sqlite3
 
-
 def process_gold_order(customer_id, order_type, quantity, price):
     conn = sqlite3.connect("trading.db")
 
