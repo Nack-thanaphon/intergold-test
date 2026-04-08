@@ -8,7 +8,7 @@
         "customer_id": "C001",
         "order_type": "buy",
         "quantity": 1.0,
-        "price_freshness": 30150
+        "quoted_price": 30150
       },
       "useCustomerBalance": true,
       "useMarketPrice": true,
@@ -27,7 +27,7 @@
         "customer_id": "C001",
         "order_type": "sell",
         "quantity": 0.5,
-        "price_freshness": 29700
+        "quoted_price": 29700
       },
       "useCustomerBalance": false,
       "useMarketPrice": true,
@@ -46,7 +46,7 @@
         "customer_id": "C001",
         "order_type": "transfer",
         "quantity": 1.0,
-        "price_freshness": 30000
+        "quoted_price": 30000
       },
       "useCustomerBalance": false,
       "useMarketPrice": false,
@@ -65,7 +65,7 @@
         "customer_id": "C001",
         "order_type": "buy",
         "quantity": 0,
-        "price_freshness": 30000
+        "quoted_price": 30000
       },
       "useCustomerBalance": false,
       "useMarketPrice": false,
@@ -84,7 +84,7 @@
         "customer_id": "C001",
         "order_type": "buy",
         "quantity": 1.3,
-        "price_freshness": 30000
+        "quoted_price": 30000
       },
       "useCustomerBalance": false,
       "useMarketPrice": false,
@@ -103,7 +103,7 @@
         "customer_id": "C002",
         "order_type": "buy",
         "quantity": 5.0,
-        "price_freshness": 30150
+        "quoted_price": 30150
       },
       "useCustomerBalance": true,
       "useMarketPrice": true,
@@ -122,7 +122,7 @@
         "customer_id": "C001",
         "order_type": "buy",
         "quantity": 1.0,
-        "price_freshness": 31000
+        "quoted_price": 31000
       },
       "useCustomerBalance": true,
       "useMarketPrice": true,
@@ -141,7 +141,7 @@
         "customer_id": "C001",
         "order_type": "buy",
         "quantity": 1.0,
-        "price_freshness": 30753
+        "quoted_price": 30753
       },
       "useCustomerBalance": true,
       "useMarketPrice": true,
@@ -160,7 +160,7 @@
         "customer_id": "C001",
         "order_type": "buy",
         "quantity": -1.0,
-        "price_freshness": 30000
+        "quoted_price": 30000
       },
       "useCustomerBalance": false,
       "useMarketPrice": false,
@@ -179,7 +179,7 @@
         "customer_id": "C002",
         "order_type": "sell",
         "quantity": 1.0,
-        "price_freshness": 29700
+        "quoted_price": 29700
       },
       "useCustomerBalance": false,
       "useMarketPrice": true,

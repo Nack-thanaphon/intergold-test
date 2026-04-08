@@ -8,7 +8,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'buy',
         quantity: 1.0,
-        price_freshness: 30000,
+        quoted_price: 30000,
       };
       const result = validateOrder(order);
       expect(result.valid).toBe(true);
@@ -19,7 +19,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'sell',
         quantity: 1.0,
-        price_freshness: 30000,
+        quoted_price: 30000,
       };
       const result = validateOrder(order);
       expect(result.valid).toBe(true);
@@ -30,11 +30,11 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'trade',
         quantity: 1.0,
-        price_freshness: 30000,
+        quoted_price: 30000,
       };
       const result = validateOrder(order);
       expect(result.valid).toBe(false);
-      expect(result.errors).toContain('Order type must be either "buy" or "sell"');
+      expect(result.errors).toContain('Order type must be either buy or sell');
     });
 
     it('should reject empty order type', () => {
@@ -42,11 +42,11 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: '',
         quantity: 1.0,
-        price_freshness: 30000,
+        quoted_price: 30000,
       };
       const result = validateOrder(order);
       expect(result.valid).toBe(false);
-      expect(result.errors).toContain('Order type must be either "buy" or "sell"');
+      expect(result.errors).toContain('Order type must be either buy or sell');
     });
   });
 
@@ -56,7 +56,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'buy',
         quantity: 1.0,
-        price_freshness: 30000,
+        quoted_price: 30000,
       };
       const result = validateOrder(order);
       expect(result.valid).toBe(true);
@@ -67,7 +67,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'buy',
         quantity: 1.5,
-        price_freshness: 30000,
+        quoted_price: 30000,
       };
       const result = validateOrder(order);
       expect(result.valid).toBe(true);
@@ -78,7 +78,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'buy',
         quantity: 2.5,
-        price_freshness: 30000,
+        quoted_price: 30000,
       };
       const result = validateOrder(order);
       expect(result.valid).toBe(true);
@@ -89,7 +89,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'buy',
         quantity: 1.3,
-        price_freshness: 30000,
+        quoted_price: 30000,
       };
       const result = validateOrder(order);
       expect(result.valid).toBe(false);
@@ -103,7 +103,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'buy',
         quantity: -1.0,
-        price_freshness: 30000,
+        quoted_price: 30000,
       };
       const result = validateOrder(order);
       expect(result.valid).toBe(false);
@@ -115,7 +115,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'buy',
         quantity: 0,
-        price_freshness: 30000,
+        quoted_price: 30000,
       };
       const result = validateOrder(order);
       expect(result.valid).toBe(false);
@@ -129,7 +129,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'buy',
         quantity: 2.0,
-        price_freshness: 30000,
+        quoted_price: 30000,
       };
       const customerBalance: CustomerBalance = {
         balance: 100000,
@@ -143,7 +143,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'buy',
         quantity: 2.0,
-        price_freshness: 30000,
+        quoted_price: 30000,
       };
       const customerBalance: CustomerBalance = {
         balance: 60000,
@@ -157,7 +157,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'buy',
         quantity: 3.0,
-        price_freshness: 30000,
+        quoted_price: 30000,
       };
       const customerBalance: CustomerBalance = {
         balance: 50000,
@@ -174,7 +174,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'sell',
         quantity: 2.0,
-        price_freshness: 30000,
+        quoted_price: 30000,
       };
       const customerBalance: CustomerBalance = {
         balance: 0,
@@ -190,7 +190,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'buy',
         quantity: 1.0,
-        price_freshness: 30500,
+        quoted_price: 30500,
       };
       const currentMarketPrice = 30000;
       const result = validateOrder(order, undefined, currentMarketPrice);
@@ -202,7 +202,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'buy',
         quantity: 1.0,
-        price_freshness: 30000,
+        quoted_price: 30000,
       };
       const currentMarketPrice = 30000;
       const result = validateOrder(order, undefined, currentMarketPrice);
@@ -214,7 +214,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'buy',
         quantity: 1.0,
-        price_freshness: 30600,
+        quoted_price: 30600,
       };
       const currentMarketPrice = 30000;
       const result = validateOrder(order, undefined, currentMarketPrice);
@@ -226,7 +226,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'sell',
         quantity: 1.0,
-        price_freshness: 29400,
+        quoted_price: 29400,
       };
       const currentMarketPrice = 30000;
       const result = validateOrder(order, undefined, currentMarketPrice);
@@ -238,7 +238,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'sell',
         quantity: 1.0,
-        price_freshness: 31000,
+        quoted_price: 31000,
       };
       const currentMarketPrice = 30000;
       const result = validateOrder(order, undefined, currentMarketPrice);
@@ -253,7 +253,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'sell',
         quantity: 1.0,
-        price_freshness: 29000,
+        quoted_price: 29000,
       };
       const currentMarketPrice = 30000;
       const result = validateOrder(order, undefined, currentMarketPrice);
@@ -270,7 +270,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'invalid',
         quantity: -1.3,
-        price_freshness: 35000,
+        quoted_price: 35000,
       };
       const customerBalance: CustomerBalance = {
         balance: 1000,
@@ -286,7 +286,7 @@ describe('Order Validation Module', () => {
         customer_id: 'CUST001',
         order_type: 'buy',
         quantity: 2.5,
-        price_freshness: 30300,
+        quoted_price: 30300,
       };
       const customerBalance: CustomerBalance = {
         balance: 100000,
@@ -302,7 +302,7 @@ describe('Order Validation Module', () => {
         customer_id: 'CUST002',
         order_type: 'sell',
         quantity: 1.5,
-        price_freshness: 29700,
+        quoted_price: 29700,
       };
       const currentMarketPrice = 30000;
       const result = validateOrder(order, undefined, currentMarketPrice);
@@ -317,7 +317,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'buy',
         quantity: 1.0,
-        price_freshness: 30000,
+        quoted_price: 30000,
       };
       const result = validateOrder(order);
       expect(result.valid).toBe(true);
@@ -328,7 +328,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'buy',
         quantity: 1.0,
-        price_freshness: 30000,
+        quoted_price: 30000,
       };
       const result = validateOrder(order);
       expect(result.valid).toBe(true);
@@ -339,7 +339,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'buy',
         quantity: 4.5,
-        price_freshness: 30000,
+        quoted_price: 30000,
       };
       const result = validateOrder(order);
       expect(result.valid).toBe(true);
@@ -350,7 +350,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'buy',
         quantity: 0.5,
-        price_freshness: 30000,
+        quoted_price: 30000,
       };
       const result = validateOrder(order);
       expect(result.valid).toBe(true);
@@ -363,7 +363,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'buy',
         quantity: 1.0,
-        price_freshness: 30150,
+        quoted_price: 30150,
       };
       const currentMarketPrice = 30000;
       const result = validateOrder(order, undefined, currentMarketPrice);
@@ -377,7 +377,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'sell',
         quantity: 1.0,
-        price_freshness: 30000,
+        quoted_price: 30000,
       };
       const currentMarketPrice = 30000;
       const result = validateOrder(order, undefined, currentMarketPrice);
@@ -390,7 +390,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'buy',
         quantity: 1.0,
-        price_freshness: 30150,
+        quoted_price: 30150,
       };
       const currentMarketPrice = 30000;
       const result = validateOrder(order, undefined, currentMarketPrice);
@@ -403,7 +403,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'buy',
         quantity: 1.0,
-        price_freshness: 31000,
+        quoted_price: 31000,
       };
       const currentMarketPrice = 30000;
       const result = validateOrder(order, undefined, currentMarketPrice);
@@ -417,7 +417,7 @@ describe('Order Validation Module', () => {
         customer_id: 1,
         order_type: 'buy',
         quantity: 2.0,
-        price_freshness: 30150,
+        quoted_price: 30150,
       };
       const currentMarketPrice = 30000;
       const result = validateOrder(order, undefined, currentMarketPrice);
@@ -433,7 +433,7 @@ describe('Order Validation Module', () => {
         customer_id: 'C001',
         order_type: 'buy',
         quantity: 2.0,
-        price_freshness: 30000,
+        quoted_price: 30000,
       };
       const dailyHistory: DailyOrderHistory = {
         customer_id: 'C001',
@@ -445,7 +445,7 @@ describe('Order Validation Module', () => {
       const result = validateOrder(order, undefined, undefined, dailyHistory);
       
       expect(result.valid).toBe(true);
-      expect(result.remainingAllowance).toBe(3.5);
+      expect(result.remainQuota).toBe(3.5);
     });
 
     it('should reject order exceeding daily limit', () => {
@@ -453,7 +453,7 @@ describe('Order Validation Module', () => {
         customer_id: 'C001',
         order_type: 'buy',
         quantity: 3.0,
-        price_freshness: 30000,
+        quoted_price: 30000,
       };
       const dailyHistory: DailyOrderHistory = {
         customer_id: 'C001',
@@ -466,7 +466,7 @@ describe('Order Validation Module', () => {
       
       expect(result.valid).toBe(false);
       expect(result.errors).toContain('Daily trading limit exceeded. Maximum 5 baht-weight per day');
-      expect(result.remainingAllowance).toBe(2.5);
+      expect(result.remainQuota).toBe(2.5);
     });
 
     it('should accept order exactly at daily limit', () => {
@@ -474,7 +474,7 @@ describe('Order Validation Module', () => {
         customer_id: 'C001',
         order_type: 'sell',
         quantity: 2.0,
-        price_freshness: 30000,
+        quoted_price: 30000,
       };
       const dailyHistory: DailyOrderHistory = {
         customer_id: 'C001',
@@ -486,7 +486,7 @@ describe('Order Validation Module', () => {
       const result = validateOrder(order, undefined, undefined, dailyHistory);
       
       expect(result.valid).toBe(true);
-      expect(result.remainingAllowance).toBe(2.0);
+      expect(result.remainQuota).toBe(2.0);
     });
 
     it('should handle no daily history (new customer)', () => {
@@ -494,13 +494,13 @@ describe('Order Validation Module', () => {
         customer_id: 'C002',
         order_type: 'buy',
         quantity: 4.5,
-        price_freshness: 30000,
+        quoted_price: 30000,
       };
       
       const result = validateOrder(order);
       
       expect(result.valid).toBe(true);
-      expect(result.remainingAllowance).toBe(5);
+      expect(result.remainQuota).toBe(5);
     });
 
     it('should only count today orders in daily limit', () => {
@@ -511,7 +511,7 @@ describe('Order Validation Module', () => {
         customer_id: 'C001',
         order_type: 'buy',
         quantity: 4.0,
-        price_freshness: 30000,
+        quoted_price: 30000,
       };
       const dailyHistory: DailyOrderHistory = {
         customer_id: 'C001',
@@ -524,7 +524,7 @@ describe('Order Validation Module', () => {
       const result = validateOrder(order, undefined, undefined, dailyHistory);
       
       expect(result.valid).toBe(true);
-      expect(result.remainingAllowance).toBe(4.5);
+      expect(result.remainQuota).toBe(4.5);
     });
 
     it('should show correct remaining allowance when limit exceeded', () => {
@@ -532,7 +532,7 @@ describe('Order Validation Module', () => {
         customer_id: 'C001',
         order_type: 'buy',
         quantity: 5.0,
-        price_freshness: 30000,
+        quoted_price: 30000,
       };
       const dailyHistory: DailyOrderHistory = {
         customer_id: 'C001',
@@ -544,7 +544,7 @@ describe('Order Validation Module', () => {
       const result = validateOrder(order, undefined, undefined, dailyHistory);
       
       expect(result.valid).toBe(false);
-      expect(result.remainingAllowance).toBe(1.0);
+      expect(result.remainQuota).toBe(1.0);
     });
   });
 });

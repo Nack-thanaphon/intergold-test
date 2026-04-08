@@ -2,14 +2,14 @@ export interface Order {
   customer_id: string | number;
   order_type: string;
   quantity: number;
-  price_freshness: number;
+  quoted_price: number;
 }
 
 export interface ValidationResult {
   valid: boolean;
   errors?: string[];
   spread?: number;
-  remainingAllowance?: number;
+  remainQuota?: number;
 }
 
 export interface CustomerBalance {
@@ -23,3 +23,9 @@ export interface DailyOrderHistory {
     timestamp: Date;
   }>;
 }
+
+export enum ORDER_TYPE {
+  BUY = 'buy',
+  SELL = 'sell',
+}
+

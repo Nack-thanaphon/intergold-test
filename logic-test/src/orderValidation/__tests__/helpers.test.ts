@@ -1,13 +1,12 @@
 import { expect, it, describe } from '@jest/globals';
 import {
-  createError,
   validateOrderType,
   validateQuantity,
   validateBalance,
   calculateSpread,
   calculateExpectedBuyPrice,
   validateBuyPriceWithSpread,
-  validatePriceFreshness,
+  validateQuotedPrice,
   getTodayOrderTotal,
   validateDailyLimit,
 } from '../helpers';
@@ -15,17 +14,6 @@ import { CustomerBalance, DailyOrderHistory } from '../types';
 import { ERROR_MESSAGES, SPREAD_MARGIN, PRICE_TOLERANCE_PERCENT, DAILY_TRADING_LIMIT } from '../constants';
 
 describe('Helper Functions', () => {
-  describe('createError', () => {
-    it('should return the error message', () => {
-      const message = 'Test error';
-      expect(createError(message)).toBe(message);
-    });
-
-    it('should handle empty string', () => {
-      expect(createError('')).toBe('');
-    });
-  });
-
   describe('validateOrderType', () => {
     it('should return null for valid "buy" order type', () => {
       expect(validateOrderType('buy')).toBeNull();
@@ -189,20 +177,20 @@ describe('Helper Functions', () => {
     });
   });
 
-  describe('validatePriceFreshness', () => {
+  describe('validateQuotedPrice', () => {
     it('should return null when currentMarketPrice is undefined', () => {
-      expect(validatePriceFreshness(1000, 'buy', undefined)).toBeNull();
+      expect(validateQuotedPrice('buy', 1000, undefined)).toBeNull();
     });
 
     it('should return null when currentMarketPrice is not finite', () => {
-      expect(validatePriceFreshness(1000, 'buy', NaN)).toBeNull();
-      expect(validatePriceFreshness(1000, 'buy', Infinity)).toBeNull();
+      expect(validateQuotedPrice('buy', 1000, NaN)).toBeNull();
+      expect(validateQuotedPrice('buy', 1000, Infinity)).toBeNull();
     });
 
     it('should validate buy orders with spread', () => {
       const marketPrice = 1000;
       const expectedBuyPrice = calculateExpectedBuyPrice(marketPrice);
-      expect(validatePriceFreshness(expectedBuyPrice, 'buy', marketPrice)).toBeNull();
+      expect(validateQuotedPrice('buy', expectedBuyPrice, marketPrice)).toBeNull();
     });
 
     it('should return error for buy orders with invalid spread', () => {
@@ -210,24 +198,24 @@ describe('Helper Functions', () => {
       const expectedBuyPrice = calculateExpectedBuyPrice(marketPrice);
       const threshold = expectedBuyPrice * PRICE_TOLERANCE_PERCENT;
       const invalidPrice = expectedBuyPrice + threshold + 1;
-      expect(validatePriceFreshness(invalidPrice, 'buy', marketPrice)).toBe(ERROR_MESSAGES.INVALID_BUY_PRICE_SPREAD);
+      expect(validateQuotedPrice('buy', invalidPrice, marketPrice)).toBe(ERROR_MESSAGES.INVALID_BUY_PRICE_SPREAD);
     });
 
     it('should return null for sell orders within tolerance', () => {
       const marketPrice = 1000;
-      expect(validatePriceFreshness(marketPrice, 'sell', marketPrice)).toBeNull();
+      expect(validateQuotedPrice('sell', marketPrice, marketPrice)).toBeNull();
       
       const threshold = marketPrice * PRICE_TOLERANCE_PERCENT;
-      expect(validatePriceFreshness(marketPrice + threshold, 'sell', marketPrice)).toBeNull();
-      expect(validatePriceFreshness(marketPrice - threshold, 'sell', marketPrice)).toBeNull();
+      expect(validateQuotedPrice('sell', marketPrice + threshold, marketPrice)).toBeNull();
+      expect(validateQuotedPrice('sell', marketPrice - threshold, marketPrice)).toBeNull();
     });
 
     it('should return error for sell orders outside tolerance', () => {
       const marketPrice = 1000;
       const threshold = marketPrice * PRICE_TOLERANCE_PERCENT;
       
-      expect(validatePriceFreshness(marketPrice + threshold + 0.01, 'sell', marketPrice)).toBe(ERROR_MESSAGES.STALE_PRICE);
-      expect(validatePriceFreshness(marketPrice - threshold - 0.01, 'sell', marketPrice)).toBe(ERROR_MESSAGES.STALE_PRICE);
+      expect(validateQuotedPrice('sell', marketPrice + threshold + 0.01, marketPrice)).toBe(ERROR_MESSAGES.STALE_PRICE);
+      expect(validateQuotedPrice('sell', marketPrice - threshold - 0.01, marketPrice)).toBe(ERROR_MESSAGES.STALE_PRICE);
     });
   });
 
@@ -314,7 +302,7 @@ describe('Helper Functions', () => {
     it('should allow order when no history exists', () => {
       const result = validateDailyLimit(2, undefined);
       expect(result.error).toBeNull();
-      expect(result.remainingAllowance).toBe(DAILY_TRADING_LIMIT);
+      expect(result.remainQuota).toBe(DAILY_TRADING_LIMIT);
     });
 
     it('should allow order when within daily limit', () => {
@@ -326,7 +314,7 @@ describe('Helper Functions', () => {
       };
       const result = validateDailyLimit(2, history);
       expect(result.error).toBeNull();
-      expect(result.remainingAllowance).toBe(4);
+      expect(result.remainQuota).toBe(4);
     });
 
     it('should allow order when exactly at daily limit', () => {
@@ -338,7 +326,7 @@ describe('Helper Functions', () => {
       };
       const result = validateDailyLimit(3, history);
       expect(result.error).toBeNull();
-      expect(result.remainingAllowance).toBe(3);
+      expect(result.remainQuota).toBe(3);
     });
 
     it('should reject order when exceeding daily limit', () => {
@@ -350,7 +338,7 @@ describe('Helper Functions', () => {
       };
       const result = validateDailyLimit(2.5, history);
       expect(result.error).toBe(ERROR_MESSAGES.DAILY_LIMIT_EXCEEDED);
-      expect(result.remainingAllowance).toBe(2);
+      expect(result.remainQuota).toBe(2);
     });
 
     it('should calculate remaining allowance correctly', () => {
@@ -363,7 +351,7 @@ describe('Helper Functions', () => {
       };
       const result = validateDailyLimit(1, history);
       expect(result.error).toBeNull();
-      expect(result.remainingAllowance).toBe(2.5);
+      expect(result.remainQuota).toBe(2.5);
     });
 
     it('should not count yesterday orders in daily limit', () => {
@@ -379,7 +367,7 @@ describe('Helper Functions', () => {
       };
       const result = validateDailyLimit(3, history);
       expect(result.error).toBeNull();
-      expect(result.remainingAllowance).toBe(4);
+      expect(result.remainQuota).toBe(4);
     });
 
     it('should reject when new order would exceed limit', () => {
@@ -391,7 +379,7 @@ describe('Helper Functions', () => {
       };
       const result = validateDailyLimit(1, history);
       expect(result.error).toBe(ERROR_MESSAGES.DAILY_LIMIT_EXCEEDED);
-      expect(result.remainingAllowance).toBe(0.5);
+      expect(result.remainQuota).toBe(0.5);
     });
   });
 });

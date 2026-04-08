@@ -33,9 +33,9 @@ app.post("/validate-order", (req: Request<{}, {}, ValidateOrderRequest>, res: Re
 
     return res.status(200).json({
       valid: result.valid,
-      errors: result.errors || [],
+      errors: result.errors,
       spread: result.spread,
-      remainingAllowance: result.remainingAllowance,
+      remainQuota: result.remainQuota,
     });
   } catch (error) {
     return res.status(500).json({

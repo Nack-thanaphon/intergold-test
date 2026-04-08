@@ -1,24 +1,20 @@
-import { CustomerBalance, DailyOrderHistory } from './types';
+import { CustomerBalance, DailyOrderHistory, ORDER_TYPE } from './types';
 import { VALID_ORDER_TYPES, PRICE_TOLERANCE_PERCENT, SPREAD_MARGIN, DAILY_TRADING_LIMIT, ERROR_MESSAGES } from './constants';
 
-export function createError(message: string): string | null {
-  return message;
-}
-
 export function validateOrderType(orderType: string): string | null {
-  if (!orderType || !VALID_ORDER_TYPES.includes(orderType as any)) {
-    return createError(ERROR_MESSAGES.INVALID_ORDER_TYPE);
+  if (!orderType || !(VALID_ORDER_TYPES as readonly string[]).includes(orderType)) {
+    return ERROR_MESSAGES.INVALID_ORDER_TYPE;
   }
   return null;
 }
 
 export function validateQuantity(quantity: number): string | null {
   if (!Number.isFinite(quantity) || quantity <= 0) {
-    return createError(ERROR_MESSAGES.INVALID_QUANTITY_POSITIVE);
+    return ERROR_MESSAGES.INVALID_QUANTITY_POSITIVE;
   }
   
   if ((quantity * 2) % 1 !== 0) {
-    return createError(ERROR_MESSAGES.INVALID_QUANTITY_INCREMENT);
+    return ERROR_MESSAGES.INVALID_QUANTITY_INCREMENT;
   }
   
   return null;
@@ -30,13 +26,13 @@ export function validateBalance(
   price: number,
   customerBalance?: CustomerBalance
 ): string | null {
-  if (orderType !== 'buy' || !customerBalance) {
+  if (orderType !== ORDER_TYPE.BUY || !customerBalance) {
     return null;
   }
 
   const totalCost = quantity * price;
   if (customerBalance.balance < totalCost) {
-    return createError(ERROR_MESSAGES.INSUFFICIENT_BALANCE);
+    return ERROR_MESSAGES.INSUFFICIENT_BALANCE;
   }
   
   return null;
@@ -59,22 +55,26 @@ export function validateBuyPriceWithSpread(
   const threshold = expectedBuyPrice * PRICE_TOLERANCE_PERCENT;
   
   if (priceDiff > threshold) {
-    return createError(ERROR_MESSAGES.INVALID_BUY_PRICE_SPREAD);
+    return ERROR_MESSAGES.INVALID_BUY_PRICE_SPREAD;
   }
   
   return null;
 }
 
-export function validatePriceFreshness(
-  quotedPrice: number,
+export function validateQuotedPrice(
   orderType: string,
+  quotedPrice: number,
   currentMarketPrice?: number
 ): string | null {
+  if (!Number.isFinite(quotedPrice) || quotedPrice <= 0) {
+    return 'Quoted price must be a positive number';
+  }
+
   if (currentMarketPrice === undefined || !Number.isFinite(currentMarketPrice)) {
     return null;
   }
 
-  if (orderType === 'buy') {
+  if (orderType === ORDER_TYPE.BUY) {
     return validateBuyPriceWithSpread(quotedPrice, currentMarketPrice);
   }
 
@@ -82,18 +82,18 @@ export function validatePriceFreshness(
   const threshold = currentMarketPrice * PRICE_TOLERANCE_PERCENT;
   
   if (priceDiff > threshold) {
-    return createError(ERROR_MESSAGES.STALE_PRICE);
+    return ERROR_MESSAGES.STALE_PRICE;
   }
   
   return null;
 }
 
-export function getTodayOrderTotal(dailyHistory?: DailyOrderHistory): number {
+export function getTodayOrderTotal(dailyHistory?: DailyOrderHistory, currentDate: Date = new Date()): number {
   if (!dailyHistory || !dailyHistory.orders) {
     return 0;
   }
 
-  const today = new Date();
+  const today = new Date(currentDate);
   today.setHours(0, 0, 0, 0);
 
   return dailyHistory.orders
@@ -107,21 +107,22 @@ export function getTodayOrderTotal(dailyHistory?: DailyOrderHistory): number {
 
 export function validateDailyLimit(
   quantity: number,
-  dailyHistory?: DailyOrderHistory
-): { error: string | null; remainingAllowance: number } {
-  const todayTotal = getTodayOrderTotal(dailyHistory);
+  dailyHistory?: DailyOrderHistory,
+  currentDate?: Date
+): { error: string | null; remainQuota: number } {
+  const todayTotal = getTodayOrderTotal(dailyHistory, currentDate);
   const newTotal = todayTotal + quantity;
-  const remainingAllowance = DAILY_TRADING_LIMIT - todayTotal;
+  const remainQuota = DAILY_TRADING_LIMIT - todayTotal;
 
   if (newTotal > DAILY_TRADING_LIMIT) {
     return {
-      error: createError(ERROR_MESSAGES.DAILY_LIMIT_EXCEEDED),
-      remainingAllowance,
+      error: ERROR_MESSAGES.DAILY_LIMIT_EXCEEDED,
+      remainQuota,
     };
   }
 
   return {
     error: null,
-    remainingAllowance,
+    remainQuota,
   };
 }

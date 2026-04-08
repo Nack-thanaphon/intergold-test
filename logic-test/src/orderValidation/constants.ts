@@ -5,7 +5,7 @@ export const SPREAD_MARGIN = 0.005;
 export const DAILY_TRADING_LIMIT = 5;
 
 export const ERROR_MESSAGES = {
-  INVALID_ORDER_TYPE: 'Order type must be either "buy" or "sell"',
+  INVALID_ORDER_TYPE: 'Order type must be either buy or sell',
   INVALID_QUANTITY_POSITIVE: 'Quantity must be a positive number (multiples of 0.5 baht-weight)',
   INVALID_QUANTITY_INCREMENT: 'Quantity must be in multiples of 0.5 baht-weight (e.g., 1.0, 1.5, 2.5)',
   INSUFFICIENT_BALANCE: `Insufficient balance: customer's available balance must be sufficient to cover quantity × price`,
