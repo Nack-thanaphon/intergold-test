@@ -1,0 +1,263 @@
+{
+  "info": {
+    "name": "Order Validation API",
+    "description": "API สำหรับตรวจสอบความถูกต้องของคำสั่งซื้อขายทองคำ",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/health",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "Case 1: Valid Buy Order",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"order\": {\n    \"customer_id\": \"C001\",\n    \"order_type\": \"buy\",\n    \"quantity\": 1.0,\n    \"price_freshness\": 30150\n  },\n  \"customerBalance\": {\n    \"balance\": 100000\n  },\n  \"currentMarketPrice\": 30000\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/validate-order",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["validate-order"]
+        },
+        "description": "buy, qty 1.0, ราคาปกติ, balance พอ - Expected: PASS"
+      }
+    },
+    {
+      "name": "Case 2: Valid Sell Order",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"order\": {\n    \"customer_id\": \"C001\",\n    \"order_type\": \"sell\",\n    \"quantity\": 0.5,\n    \"price_freshness\": 29700\n  },\n  \"currentMarketPrice\": 30000\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/validate-order",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["validate-order"]
+        },
+        "description": "sell, qty 0.5, ราคาปกติ - Expected: PASS"
+      }
+    },
+    {
+      "name": "Case 3: Invalid Order Type",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"order\": {\n    \"customer_id\": \"C001\",\n    \"order_type\": \"transfer\",\n    \"quantity\": 1.0,\n    \"price_freshness\": 30000\n  }\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/validate-order",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["validate-order"]
+        },
+        "description": "order_type = \"transfer\" - Expected: FAIL"
+      }
+    },
+    {
+      "name": "Case 4: Zero Quantity",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"order\": {\n    \"customer_id\": \"C001\",\n    \"order_type\": \"buy\",\n    \"quantity\": 0,\n    \"price_freshness\": 30000\n  }\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/validate-order",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["validate-order"]
+        },
+        "description": "qty = 0 - Expected: FAIL"
+      }
+    },
+    {
+      "name": "Case 5: Invalid Quantity Multiple",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"order\": {\n    \"customer_id\": \"C001\",\n    \"order_type\": \"buy\",\n    \"quantity\": 1.3,\n    \"price_freshness\": 30000\n  }\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/validate-order",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["validate-order"]
+        },
+        "description": "qty = 1.3 (ไม่ใช่ multiple of 0.5) - Expected: FAIL"
+      }
+    },
+    {
+      "name": "Case 6: Insufficient Balance",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"order\": {\n    \"customer_id\": \"C002\",\n    \"order_type\": \"buy\",\n    \"quantity\": 5.0,\n    \"price_freshness\": 30150\n  },\n  \"customerBalance\": {\n    \"balance\": 50000\n  },\n  \"currentMarketPrice\": 30000\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/validate-order",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["validate-order"]
+        },
+        "description": "balance ไม่พอ (buy) - C002 มี 50000 THB ต้องการ 150750 THB - Expected: FAIL"
+      }
+    },
+    {
+      "name": "Case 7: Price Too Far From Market",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"order\": {\n    \"customer_id\": \"C001\",\n    \"order_type\": \"buy\",\n    \"quantity\": 1.0,\n    \"price_freshness\": 31000\n  },\n  \"customerBalance\": {\n    \"balance\": 100000\n  },\n  \"currentMarketPrice\": 30000\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/validate-order",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["validate-order"]
+        },
+        "description": "ราคาห่างจาก market เกิน 2% - expected 30150 but got 31000 - Expected: FAIL"
+      }
+    },
+    {
+      "name": "Case 8: Price At 2% Boundary",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"order\": {\n    \"customer_id\": \"C001\",\n    \"order_type\": \"buy\",\n    \"quantity\": 1.0,\n    \"price_freshness\": 30753\n  },\n  \"customerBalance\": {\n    \"balance\": 100000\n  },\n  \"currentMarketPrice\": 30000\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/validate-order",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["validate-order"]
+        },
+        "description": "ราคาพอดีขอบ 2% - 30150 + 2% = 30753 - Expected: PASS"
+      }
+    },
+    {
+      "name": "Case 9: Negative Quantity",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"order\": {\n    \"customer_id\": \"C001\",\n    \"order_type\": \"buy\",\n    \"quantity\": -1.0,\n    \"price_freshness\": 30000\n  }\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/validate-order",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["validate-order"]
+        },
+        "description": "qty ติดลบ - Expected: FAIL"
+      }
+    },
+    {
+      "name": "Case 10: Sell Does Not Check Balance",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"order\": {\n    \"customer_id\": \"C002\",\n    \"order_type\": \"sell\",\n    \"quantity\": 1.0,\n    \"price_freshness\": 29700\n  },\n  \"currentMarketPrice\": 30000\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/validate-order",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["validate-order"]
+        },
+        "description": "sell ไม่เช็ค balance - C002 มี balance น้อยแต่ sell ได้ - Expected: PASS"
+      }
+    }
+  ]
+}

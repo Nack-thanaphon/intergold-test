@@ -1,0 +1,194 @@
+{
+  "cases": [
+    {
+      "id": 1,
+      "name": "Valid Buy Order",
+      "enabled": true,
+      "order": {
+        "customer_id": "C001",
+        "order_type": "buy",
+        "quantity": 1.0,
+        "price_freshness": 30150
+      },
+      "useCustomerBalance": true,
+      "useMarketPrice": true,
+      "useDailyHistory": false,
+      "expected": {
+        "valid": true,
+        "errors": []
+      },
+      "description": "buy, qty 1.0, ราคาปกติ, balance พอ"
+    },
+    {
+      "id": 2,
+      "name": "Valid Sell Order",
+      "enabled": true,
+      "order": {
+        "customer_id": "C001",
+        "order_type": "sell",
+        "quantity": 0.5,
+        "price_freshness": 29700
+      },
+      "useCustomerBalance": false,
+      "useMarketPrice": true,
+      "useDailyHistory": false,
+      "expected": {
+        "valid": true,
+        "errors": []
+      },
+      "description": "sell, qty 0.5, ราคาปกติ"
+    },
+    {
+      "id": 3,
+      "name": "Invalid Order Type",
+      "enabled": true,
+      "order": {
+        "customer_id": "C001",
+        "order_type": "transfer",
+        "quantity": 1.0,
+        "price_freshness": 30000
+      },
+      "useCustomerBalance": false,
+      "useMarketPrice": false,
+      "useDailyHistory": false,
+      "expected": {
+        "valid": false,
+        "errors": ["Order type must be either \"buy\" or \"sell\""]
+      },
+      "description": "order_type = \"transfer\""
+    },
+    {
+      "id": 4,
+      "name": "Zero Quantity",
+      "enabled": true,
+      "order": {
+        "customer_id": "C001",
+        "order_type": "buy",
+        "quantity": 0,
+        "price_freshness": 30000
+      },
+      "useCustomerBalance": false,
+      "useMarketPrice": false,
+      "useDailyHistory": false,
+      "expected": {
+        "valid": false,
+        "errors": ["Quantity must be a positive number"]
+      },
+      "description": "qty = 0"
+    },
+    {
+      "id": 5,
+      "name": "Invalid Quantity Multiple",
+      "enabled": true,
+      "order": {
+        "customer_id": "C001",
+        "order_type": "buy",
+        "quantity": 1.3,
+        "price_freshness": 30000
+      },
+      "useCustomerBalance": false,
+      "useMarketPrice": false,
+      "useDailyHistory": false,
+      "expected": {
+        "valid": false,
+        "errors": ["Quantity must be in multiples of 0.5 baht-weight"]
+      },
+      "description": "qty = 1.3 (ไม่ใช่ multiple of 0.5)"
+    },
+    {
+      "id": 6,
+      "name": "Insufficient Balance",
+      "enabled": true,
+      "order": {
+        "customer_id": "C002",
+        "order_type": "buy",
+        "quantity": 5.0,
+        "price_freshness": 30150
+      },
+      "useCustomerBalance": true,
+      "useMarketPrice": true,
+      "useDailyHistory": false,
+      "expected": {
+        "valid": false,
+        "errors": ["Insufficient balance"]
+      },
+      "description": "balance ไม่พอ (buy) - C002 มี 50000 THB ต้องการ 150750 THB"
+    },
+    {
+      "id": 7,
+      "name": "Price Too Far From Market",
+      "enabled": true,
+      "order": {
+        "customer_id": "C001",
+        "order_type": "buy",
+        "quantity": 1.0,
+        "price_freshness": 31000
+      },
+      "useCustomerBalance": true,
+      "useMarketPrice": true,
+      "useDailyHistory": false,
+      "expected": {
+        "valid": false,
+        "errors": ["Buy price must be within 2% of expected price"]
+      },
+      "description": "ราคาห่างจาก market เกิน 2% - expected 30150 but got 31000"
+    },
+    {
+      "id": 8,
+      "name": "Price At 2% Boundary",
+      "enabled": true,
+      "order": {
+        "customer_id": "C001",
+        "order_type": "buy",
+        "quantity": 1.0,
+        "price_freshness": 30753
+      },
+      "useCustomerBalance": true,
+      "useMarketPrice": true,
+      "useDailyHistory": false,
+      "expected": {
+        "valid": true,
+        "errors": []
+      },
+      "description": "ราคาพอดีขอบ 2% - 30150 + 2% = 30753"
+    },
+    {
+      "id": 9,
+      "name": "Negative Quantity",
+      "enabled": true,
+      "order": {
+        "customer_id": "C001",
+        "order_type": "buy",
+        "quantity": -1.0,
+        "price_freshness": 30000
+      },
+      "useCustomerBalance": false,
+      "useMarketPrice": false,
+      "useDailyHistory": false,
+      "expected": {
+        "valid": false,
+        "errors": ["Quantity must be a positive number"]
+      },
+      "description": "qty ติดลบ"
+    },
+    {
+      "id": 10,
+      "name": "Sell Does Not Check Balance",
+      "enabled": true,
+      "order": {
+        "customer_id": "C002",
+        "order_type": "sell",
+        "quantity": 1.0,
+        "price_freshness": 29700
+      },
+      "useCustomerBalance": false,
+      "useMarketPrice": true,
+      "useDailyHistory": false,
+      "expected": {
+        "valid": true,
+        "errors": []
+      },
+      "description": "sell ไม่เช็ค balance - C002 มี balance น้อยแต่ sell ได้"
+    }
+  ]
+}

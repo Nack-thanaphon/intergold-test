@@ -1,4 +1,5 @@
-import { validateOrder, Order, CustomerBalance, ValidationResult, DailyOrderHistory } from '../orderValidation';
+import { validateOrder, Order, CustomerBalance, DailyOrderHistory } from '../orderValidation';
+import { expect, it, describe } from '@jest/globals';
 
 describe('Order Validation Module', () => {
   describe('Rule 1: Order type validation', () => {
