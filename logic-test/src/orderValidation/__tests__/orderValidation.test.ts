@@ -445,7 +445,7 @@ describe('Order Validation Module', () => {
       const result = validateOrder(order, undefined, undefined, dailyHistory);
       
       expect(result.valid).toBe(true);
-      expect(result.remainQuota).toBe(3.5);
+      expect(result.remainQuota).toBe(1.5);
     });
 
     it('should reject order exceeding daily limit', () => {
@@ -486,7 +486,7 @@ describe('Order Validation Module', () => {
       const result = validateOrder(order, undefined, undefined, dailyHistory);
       
       expect(result.valid).toBe(true);
-      expect(result.remainQuota).toBe(2.0);
+      expect(result.remainQuota).toBe(0);
     });
 
     it('should handle no daily history (new customer)', () => {
@@ -500,7 +500,7 @@ describe('Order Validation Module', () => {
       const result = validateOrder(order);
       
       expect(result.valid).toBe(true);
-      expect(result.remainQuota).toBe(5);
+      expect(result.remainQuota).toBe(0.5);
     });
 
     it('should only count today orders in daily limit', () => {
@@ -524,7 +524,7 @@ describe('Order Validation Module', () => {
       const result = validateOrder(order, undefined, undefined, dailyHistory);
       
       expect(result.valid).toBe(true);
-      expect(result.remainQuota).toBe(4.5);
+      expect(result.remainQuota).toBe(0.5);
     });
 
     it('should show correct remaining allowance when limit exceeded', () => {

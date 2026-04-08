@@ -66,9 +66,6 @@ export function validateQuotedPrice(
   quotedPrice: number,
   currentMarketPrice?: number
 ): string | null {
-  if (!Number.isFinite(quotedPrice) || quotedPrice <= 0) {
-    return 'Quoted price must be a positive number';
-  }
 
   if (currentMarketPrice === undefined || !Number.isFinite(currentMarketPrice)) {
     return null;
@@ -109,20 +106,23 @@ export function validateDailyLimit(
   quantity: number,
   dailyHistory?: DailyOrderHistory,
   currentDate?: Date
-): { error: string | null; remainQuota: number } {
+): { error: string | null; remainQuota: number; maxQuota: number } {
   const todayTotal = getTodayOrderTotal(dailyHistory, currentDate);
   const newTotal = todayTotal + quantity;
-  const remainQuota = DAILY_TRADING_LIMIT - todayTotal;
+  const remainQuotaBeforeOrder = DAILY_TRADING_LIMIT - todayTotal;
+  const remainQuotaAfterOrder = DAILY_TRADING_LIMIT - newTotal;
 
   if (newTotal > DAILY_TRADING_LIMIT) {
     return {
       error: ERROR_MESSAGES.DAILY_LIMIT_EXCEEDED,
-      remainQuota,
+      remainQuota: remainQuotaBeforeOrder,
+      maxQuota: DAILY_TRADING_LIMIT,
     };
   }
 
   return {
     error: null,
-    remainQuota,
+    remainQuota: remainQuotaAfterOrder,
+    maxQuota: DAILY_TRADING_LIMIT,
   };
 }

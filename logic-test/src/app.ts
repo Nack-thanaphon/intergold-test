@@ -32,10 +32,9 @@ app.post("/validate-order", (req: Request<{}, {}, ValidateOrderRequest>, res: Re
     );
 
     return res.status(200).json({
-      valid: result.valid,
-      errors: result.errors,
-      spread: result.spread,
-      remainQuota: result.remainQuota,
+      status: result.valid ? "success" : "error",
+      message: result.valid ? "Order is valid" : "Order is invalid",
+      data: result
     });
   } catch (error) {
     return res.status(500).json({

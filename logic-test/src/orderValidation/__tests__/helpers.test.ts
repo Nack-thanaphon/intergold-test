@@ -302,7 +302,7 @@ describe('Helper Functions', () => {
     it('should allow order when no history exists', () => {
       const result = validateDailyLimit(2, undefined);
       expect(result.error).toBeNull();
-      expect(result.remainQuota).toBe(DAILY_TRADING_LIMIT);
+      expect(result.remainQuota).toBe(3);
     });
 
     it('should allow order when within daily limit', () => {
@@ -314,7 +314,7 @@ describe('Helper Functions', () => {
       };
       const result = validateDailyLimit(2, history);
       expect(result.error).toBeNull();
-      expect(result.remainQuota).toBe(4);
+      expect(result.remainQuota).toBe(2);
     });
 
     it('should allow order when exactly at daily limit', () => {
@@ -326,7 +326,7 @@ describe('Helper Functions', () => {
       };
       const result = validateDailyLimit(3, history);
       expect(result.error).toBeNull();
-      expect(result.remainQuota).toBe(3);
+      expect(result.remainQuota).toBe(0);
     });
 
     it('should reject order when exceeding daily limit', () => {
@@ -351,7 +351,7 @@ describe('Helper Functions', () => {
       };
       const result = validateDailyLimit(1, history);
       expect(result.error).toBeNull();
-      expect(result.remainQuota).toBe(2.5);
+      expect(result.remainQuota).toBe(1.5);
     });
 
     it('should not count yesterday orders in daily limit', () => {
@@ -367,7 +367,7 @@ describe('Helper Functions', () => {
       };
       const result = validateDailyLimit(3, history);
       expect(result.error).toBeNull();
-      expect(result.remainQuota).toBe(4);
+      expect(result.remainQuota).toBe(1);
     });
 
     it('should reject when new order would exceed limit', () => {

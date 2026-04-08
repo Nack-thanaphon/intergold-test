@@ -10,6 +10,7 @@ export interface ValidationResult {
   errors?: string[];
   spread?: number;
   remainQuota?: number;
+  maxQuota?: number;
 }
 
 export interface CustomerBalance {

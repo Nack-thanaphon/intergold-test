@@ -55,5 +55,6 @@ export function validateOrder(
     errors: errors.length > 0 ? errors : undefined,
     spread,
     remainQuota: dailyLimitResult.remainQuota,
+    maxQuota: dailyLimitResult.maxQuota,
   };
 }
