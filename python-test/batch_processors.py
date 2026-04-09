@@ -14,7 +14,6 @@ customer_balances = {
 
 order_log = []
 
-
 def get_market_price():
     """Fetch current gold price. In production, this calls an external API."""
     return 42150.00  # THB per baht-weight
