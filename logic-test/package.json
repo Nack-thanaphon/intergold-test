@@ -8,7 +8,7 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "build": "tsc",
-    "check": "ts-node src/example.ts",
+    "example": "ts-node src/example.ts",
     "start": "ts-node src/app.ts"
   },
   "keywords": [],
