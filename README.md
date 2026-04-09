@@ -14,7 +14,7 @@
 
 ## Test Answer Link 
 
-- https://www.notion.so/Technical-Assessment-33b453a90a4580c99947d01ff7b61f78
+- https://docs.google.com/document/d/1VhKaybw1qNSR8twahSByZmtfyg6WF6ceNabfXgMnP5s/edit?usp=sharing
 
 ## Test Note
 
